@@ -1,26 +1,23 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, {useMemo, useState} from 'react';
+import {Route, Switch, withRouter} from "react-router-dom";
 
-function App() {
+import CountrySelector from "./containers/CountrySelector";
+import ViewCountryDetails from "./containers/ViewCountryDetails";
+
+import {CountryContext} from './contexts/CountryContext';
+
+const App = () => {
+  const [country, setCountry] = useState();
+  const valueProvider = useMemo(() => ({country, setCountry}), [country, setCountry]);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+      <Switch>
+        <CountryContext.Provider value={valueProvider}>
+          <Route exact={true} path={'/'} component={CountrySelector}/>
+          <Route exact={true} path={'/view/:country'} component={ViewCountryDetails}/>
+        </CountryContext.Provider>
+      </Switch>
   );
-}
+};
 
-export default App;
+export default withRouter(App);
